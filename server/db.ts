@@ -9,8 +9,25 @@ import {
 let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
-    try { _db = drizzle(process.env.DATABASE_URL); } 
-    catch (error) { throw new Error("資料庫連線失敗"); }
+    try {
+      // === TiDB Cloud Serverless 強制 TLS，明確設定避免 URL parsing 問題 ===
+      // 部分 mysql2 版本不會解析 URL 內的 ?ssl={"...":"..."} 參數
+      // 用 mysql2.createPool 明確指定 ssl 選項，繞過 URL 解析陷阱
+      const mysql = await import("mysql2/promise");
+      const pool = mysql.createPool({
+        uri: process.env.DATABASE_URL,
+        ssl: {
+          minVersion: "TLSv1.2",
+          rejectUnauthorized: true,
+        },
+        connectionLimit: 5, // Render free 方案 + TiDB free 方案都有限額
+      });
+      _db = drizzle(pool);
+      console.log("[DB] Connected with explicit TLS config");
+    } catch (error: any) {
+      console.error("[DB] Connection setup failed:", error?.message || error);
+      throw new Error(`資料庫連線失敗：${error?.message || error}`);
+    }
   }
   return _db;
 }

@@ -110,8 +110,22 @@ function registerLineAuthRoute(app: express.Express) {
         role: role || "unknown",
       });
     } catch (e: any) {
-      console.error("[LINE Auth] Error:", e?.message || e);
-      res.status(500).json({ error: e?.message || "LINE 登入失敗" });
+      // 詳細錯誤資訊（讓 Render log 看得到底層真正的 MySQL/network 錯誤）
+      console.error("[LINE Auth] === ERROR DETAILS ===");
+      console.error("[LINE Auth] message:", e?.message);
+      console.error("[LINE Auth] code:", e?.code);
+      console.error("[LINE Auth] cause:", e?.cause?.message || e?.cause);
+      console.error("[LINE Auth] errno:", e?.errno);
+      console.error("[LINE Auth] sqlState:", e?.sqlState);
+      console.error("[LINE Auth] sqlMessage:", e?.sqlMessage);
+      console.error("[LINE Auth] stack:", e?.stack);
+      console.error("[LINE Auth] === END ERROR ===");
+      res.status(500).json({
+        error: e?.message || "LINE 登入失敗",
+        // 把 MySQL 底層錯誤碼也回傳給前端方便除錯
+        code: e?.code,
+        sqlMessage: e?.sqlMessage,
+      });
     }
   });
 }
