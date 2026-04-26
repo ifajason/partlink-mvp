@@ -1,8 +1,8 @@
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, gte, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { 
-  users, sellers, subscriptions, products, 
-  productImages, inquiries, subAccounts, payments, 
+import {
+  users, sellers, subscriptions, products,
+  productImages, inquiries, subAccounts, payments,
   quickReplies, SUBSCRIPTION_LIMITS, SubscriptionPlan
 } from "../drizzle/schema";
 
@@ -141,12 +141,82 @@ export async function updateInquiry(id: number, updates: any) {
 export async function getUserByOpenId(openId: string) {
   const db = await getDb(); return (await db!.select().from(users).where(eq(users.openId, openId)))[0];
 }
+export async function getUserById(id: number) {
+  const db = await getDb(); return (await db!.select().from(users).where(eq(users.id, id)))[0];
+}
 export async function upsertUser(data: any) {
-  const db = await getDb(); 
+  const db = await getDb();
   const existing = await db!.select().from(users).where(eq(users.openId, data.openId)).limit(1);
-  if (existing.length > 0) return existing[0];
+  if (existing.length > 0) {
+    // 已存在 → 更新可變欄位（name、email、loginMethod、lastSignedIn）
+    const updates: any = { lastSignedIn: data.lastSignedIn || new Date() };
+    if (data.name) updates.name = data.name;
+    if (data.email) updates.email = data.email;
+    if (data.loginMethod) updates.loginMethod = data.loginMethod;
+    await db!.update(users).set(updates).where(eq(users.id, existing[0].id));
+    return (await db!.select().from(users).where(eq(users.id, existing[0].id)))[0];
+  }
   const [res] = await db!.insert(users).values(data);
   return (await db!.select().from(users).where(eq(users.id, Number(res.insertId))))[0];
+}
+
+// === 詢價速率限制（防胡亂詢價） ===
+/**
+ * 算同一買家在指定時間窗口內送了幾筆詢價
+ * @param buyerUserId users.id
+ * @param windowMs 時間窗口（毫秒）
+ */
+export async function countInquiriesByBuyerInWindow(buyerUserId: number, windowMs: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const since = new Date(Date.now() - windowMs);
+  const result = await db.select({ c: count() })
+    .from(inquiries)
+    .where(and(
+      eq(inquiries.buyerUserId, buyerUserId),
+      gte(inquiries.createdAt, since),
+    ));
+  return Number(result[0]?.c || 0);
+}
+
+// === 訂閱版本上限檢查（後端強制執行） ===
+/**
+ * 取得賣家當前訂閱的 plan 與該 plan 的限制配置
+ */
+export async function getSubscriptionLimitsBySellerId(sellerId: number) {
+  const sub = await getSubscriptionBySellerId(sellerId);
+  const plan: SubscriptionPlan = (sub?.currentPlan as SubscriptionPlan) || "free";
+  return {
+    plan,
+    limits: SUBSCRIPTION_LIMITS[plan],
+  };
+}
+
+/**
+ * 算賣家目前的 active 商品數
+ */
+export async function countActiveProductsBySellerId(sellerId: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.select({ c: count() })
+    .from(products)
+    .where(and(
+      eq(products.sellerId, sellerId),
+      eq(products.status, "active"),
+    ));
+  return Number(result[0]?.c || 0);
+}
+
+/**
+ * 算商品目前的圖片數
+ */
+export async function countProductImages(productId: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.select({ c: count() })
+    .from(productImages)
+    .where(eq(productImages.productId, productId));
+  return Number(result[0]?.c || 0);
 }
 
 

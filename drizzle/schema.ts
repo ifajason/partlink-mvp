@@ -165,6 +165,9 @@ export const inquiries = mysqlTable("inquiries", {
   id: int("id").autoincrement().primaryKey(),
   productId: int("productId").notNull(), // 關聯到 products 表
   sellerId: int("sellerId").notNull(), // 關聯到 sellers 表
+  // 買家身份（強制 LINE 登入後從 users 表撈）
+  buyerUserId: int("buyerUserId"), // 關聯到 users.id，可空（向後相容）
+  // 補充聯絡資訊（強制 LINE 登入後 buyerName 從 LINE 自動帶入）
   buyerName: varchar("buyerName", { length: 100 }).notNull(),
   buyerPhone: varchar("buyerPhone", { length: 20 }),
   buyerLine: varchar("buyerLine", { length: 100 }),
