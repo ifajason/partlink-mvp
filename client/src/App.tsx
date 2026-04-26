@@ -28,7 +28,6 @@ function Router() {
       <Route path={"/edit-part"} component={EditPart} />
       <Route path={"/inquiries"} component={Inquiries} />
       <Route path={"/inquiry/:partId"} component={InquiryForm} />
-      <Route path={"/inquiry-status/:inquiryId"} component={BuyerLogin} />
       <Route path={"/buyer-login"} component={BuyerLogin} />
       <Route path={"/account"} component={Account} />
       <Route path={"/pricing"} component={PricingPlans} />

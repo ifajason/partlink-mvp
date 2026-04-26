@@ -23,6 +23,9 @@ export default function Login() {
     setLoading(true);
     const state = generateState();
     sessionStorage.setItem('line_oauth_state', state);
+    // 記錄角色與登入後導向位置，給 LineCallback 使用
+    sessionStorage.setItem('line_oauth_role', 'seller');
+    sessionStorage.setItem('line_oauth_redirect', '/dashboard');
     const redirectUri = encodeURIComponent(`${window.location.origin}/auth/line/callback`);
     const lineAuthUrl =
       `https://access.line.me/oauth2/v2.1/authorize` +
