@@ -1,0 +1,185 @@
+{
+  "brands": [
+    {
+      "id": "toyota",
+      "name": "Toyota",
+      "nameZh": "豐田",
+      "models": ["Altis", "Camry", "RAV4", "Corolla", "Yaris", "Vios", "Innova", "Fortuner", "Hiace"]
+    },
+    {
+      "id": "honda",
+      "name": "Honda",
+      "nameZh": "本田",
+      "models": ["Civic", "Accord", "CR-V", "Fit", "Odyssey", "Jazz", "City", "HRV"]
+    },
+    {
+      "id": "mazda",
+      "name": "Mazda",
+      "nameZh": "馬自達",
+      "models": ["Mazda3", "Mazda6", "CX-5", "CX-3", "CX-9", "Mazda2"]
+    },
+    {
+      "id": "ford",
+      "name": "Ford",
+      "nameZh": "福特",
+      "models": ["Focus", "Fiesta", "Ranger", "Escape", "Explorer", "Mustang"]
+    },
+    {
+      "id": "hyundai",
+      "name": "Hyundai",
+      "nameZh": "現代",
+      "models": ["Elantra", "Tucson", "Santa Fe", "Venue", "Kona", "i30"]
+    },
+    {
+      "id": "kia",
+      "name": "Kia",
+      "nameZh": "起亞",
+      "models": ["Cerato", "Sportage", "Sorento", "Seltos", "Picanto", "Niro"]
+    },
+    {
+      "id": "nissan",
+      "name": "Nissan",
+      "nameZh": "日產",
+      "models": ["Sentra", "Altima", "Qashqai", "X-Trail", "Juke", "March"]
+    },
+    {
+      "id": "suzuki",
+      "name": "Suzuki",
+      "nameZh": "鈴木",
+      "models": ["Swift", "Vitara", "Ertiga", "Ciaz", "Ignis"]
+    },
+    {
+      "id": "mitsubishi",
+      "name": "Mitsubishi",
+      "nameZh": "三菱",
+      "models": ["Lancer", "Outlander", "Pajero", "Mirage", "Xpander"]
+    },
+    {
+      "id": "bmw",
+      "name": "BMW",
+      "nameZh": "寶馬",
+      "models": ["320i", "330i", "X3", "X5", "M340i", "M440i"]
+    },
+    {
+      "id": "mercedes",
+      "name": "Mercedes-Benz",
+      "nameZh": "賓士",
+      "models": ["C-Class", "E-Class", "GLC", "GLE", "A-Class"]
+    },
+    {
+      "id": "audi",
+      "name": "Audi",
+      "nameZh": "奧迪",
+      "models": ["A4", "A6", "Q3", "Q5", "Q7", "A3"]
+    },
+    {
+      "id": "volkswagen",
+      "name": "Volkswagen",
+      "nameZh": "福斯",
+      "models": ["Golf", "Passat", "Tiguan", "Jetta", "Polo"]
+    },
+    {
+      "id": "chevrolet",
+      "name": "Chevrolet",
+      "nameZh": "雪佛蘭",
+      "models": ["Cruze", "Malibu", "Equinox", "Traverse", "Spark"]
+    },
+    {
+      "id": "buick",
+      "name": "Buick",
+      "nameZh": "別克",
+      "models": ["Excelle", "Regal", "Envision", "Enclave"]
+    },
+    {
+      "id": "lexus",
+      "name": "Lexus",
+      "nameZh": "凌志",
+      "models": ["ES", "RX", "IS", "NX", "GX"]
+    },
+    {
+      "id": "subaru",
+      "name": "Subaru",
+      "nameZh": "斯巴魯",
+      "models": ["Impreza", "Outback", "Forester", "XV", "Legacy"]
+    },
+    {
+      "id": "daihatsu",
+      "name": "Daihatsu",
+      "nameZh": "大發",
+      "models": ["Terios", "Xenia", "Ayla", "Sirion"]
+    },
+    {
+      "id": "isuzu",
+      "name": "Isuzu",
+      "nameZh": "五十鈴",
+      "models": ["D-Max", "MU-X", "Trooper"]
+    },
+    {
+      "id": "jeep",
+      "name": "Jeep",
+      "nameZh": "吉普",
+      "models": ["Wrangler", "Cherokee", "Grand Cherokee", "Compass"]
+    }
+  ],
+  "parts": [
+    "大燈",
+    "尾燈",
+    "霧燈",
+    "保桿",
+    "翼子板",
+    "車門",
+    "後視鏡",
+    "玻璃",
+    "輪圈",
+    "輪胎",
+    "避震器",
+    "煞車片",
+    "煞車盤",
+    "引擎蓋",
+    "後廂蓋",
+    "方向盤",
+    "座椅",
+    "安全帶",
+    "儀表板",
+    "冷氣壓縮機",
+    "冷凝器",
+    "散熱器",
+    "水箱",
+    "油箱",
+    "油泵",
+    "燃油噴嘴",
+    "火星塞",
+    "點火線圈",
+    "發電機",
+    "啟動馬達",
+    "電池",
+    "交流發電機",
+    "變速箱",
+    "離合器",
+    "傳動軸",
+    "差速器",
+    "轉向機",
+    "轉向拉桿",
+    "懸吊臂",
+    "穩定桿",
+    "排氣管",
+    "觸媒轉化器",
+    "消音器",
+    "進氣歧管",
+    "排氣歧管",
+    "節溫器",
+    "水泵",
+    "機油濾清器",
+    "空氣濾清器",
+    "冷氣濾清器",
+    "汽油濾清器"
+  ],
+  "conditions": [
+    "原廠",
+    "副廠",
+    "中古",
+    "翻新",
+    "拆車件",
+    "庫存品"
+  ]
+}

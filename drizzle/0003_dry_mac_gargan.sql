@@ -1,0 +1,1 @@
+ALTER TABLE `sub_accounts` MODIFY COLUMN `role` enum('owner','member') NOT NULL DEFAULT 'member';
