@@ -39,7 +39,7 @@ async function startServer() {
   app.post("/api/notify/inquiry", async (req: any, res: any) => {
     const { sellerLineUserId, buyerName, buyerContact, buyerQuestion, partName, partBrand } = req.body;
     if (!sellerLineUserId) return res.status(400).json({ error: "缺少賣家LINE ID" });
-    const TOKEN = "KI5S0MGdIPD7CckhTKR3eEhh5e1ucOpOfaoZt1Fp+yxn4HbIgGGQo6y4XK206ywLUmRF7y9Qa+q1Fm2qXGFY63IIsrJVY0+WY315L2fzWm79p2sPStgQYSjqVKtaZZrYG0mnBnjivrUGPhsGfOp5YgdB04t89/1O/w1cDnyilFU=";
+    const TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN || "";
     const message = `🔔 新詢價通知！\n\n商品：${partBrand||""} ${partName||""}\n買家：${buyerName}\n聯絡：${buyerContact}\n${buyerQuestion?"問題："+buyerQuestion:""}\n\n請盡快回覆！`;
     try {
       const r = await fetch("https://api.line.me/v2/bot/message/push", {

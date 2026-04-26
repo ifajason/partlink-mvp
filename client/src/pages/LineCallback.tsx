@@ -74,6 +74,8 @@ export default function LineCallback() {
       // 存到localStorage
       localStorage.setItem(`seller_${lineProfile?.lineUserId}`, JSON.stringify(sellerData));
       await loginWithApi(sellerData);
+      localStorage.setItem('partlink_seller', JSON.stringify(sellerData));
+localStorage.setItem('partlink_login_expiry', new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString());
       navigate('/dashboard');
     } catch (e: any) {
       alert(e.message || '建立帳號失敗');
