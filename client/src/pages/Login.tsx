@@ -10,14 +10,16 @@ function generateState() {
 
 export default function Login() {
   const [, navigate] = useLocation();
-  const { currentSeller } = useSeller();
+  const { currentUser } = useSeller();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (currentSeller) {
+    // 已 LINE 登入（有 cookie + user record）就跳 dashboard。
+    // Dashboard 會自己判斷是否需要顯示「商家初次設定表單」（needsSellerSetup）
+    if (currentUser) {
       navigate('/dashboard');
     }
-  }, [currentSeller]);
+  }, [currentUser]);
 
   const handleLineLogin = () => {
     setLoading(true);
