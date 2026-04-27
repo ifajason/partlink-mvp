@@ -20,7 +20,32 @@
 
 import { createContext, useContext, ReactNode, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import type { User, Seller as DbSeller } from "../../../drizzle/schema";
+
+// 從 schema 對應的型別（在 client 端避免直接 import drizzle schema 模組）
+interface User {
+  id: number;
+  openId: string;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  loginMethod: string | null;
+  role: "user" | "admin";
+  createdAt: Date;
+  updatedAt: Date;
+  lastSignedIn: Date;
+}
+
+interface DbSeller {
+  id: number;
+  userId: number;
+  businessName: string;
+  contactPhone: string;
+  address: string | null;
+  lineId: string | null;
+  description: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 // ============================================================
 // 向後相容的型別（給舊檔案用，新檔案請直接用 DbSeller）

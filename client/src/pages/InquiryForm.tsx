@@ -21,8 +21,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { Send, CheckCircle2, Loader2, MessageCircle } from "lucide-react";
+import { LineInAppBrowserGuard } from "@/components/LineInAppBrowserGuard";
 
 export default function InquiryForm() {
+  return (
+    <LineInAppBrowserGuard>
+      <InquiryFormContent />
+    </LineInAppBrowserGuard>
+  );
+}
+
+function InquiryFormContent() {
   const [, navigate] = useLocation();
   const [, params] = useRoute("/inquiry/:partId");
   const partId = parseInt(params?.partId || "0");

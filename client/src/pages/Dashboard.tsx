@@ -32,14 +32,28 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-green-400" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-10 h-10 animate-spin text-blue-600 mx-auto mb-3" />
+          <p className="text-gray-600">載入中...</p>
+        </div>
       </div>
     );
   }
 
   if (!currentUser) {
-    return <RedirectToLogin />;
+    // 強制硬重導，避免 wouter 客戶端路由卡住
+    if (typeof window !== "undefined" && window.location.pathname !== "/") {
+      window.location.replace("/");
+    }
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-10 h-10 animate-spin text-blue-600 mx-auto mb-3" />
+          <p className="text-gray-600">尚未登入，正在跳轉至登入頁...</p>
+        </div>
+      </div>
+    );
   }
 
   if (needsSellerSetup) {
@@ -202,9 +216,10 @@ function SellerDashboardContent({
   const [replyText, setReplyText] = useState("");
 
   const copyProductLink = (productId: number) => {
-    const url = `${window.location.origin}/inquiry/${productId}`;
+    // ?openExternalBrowser=1 → LINE 看到這參數會強制用外部瀏覽器開（避免在 LINE 內建瀏覽器登入失效）
+    const url = `${window.location.origin}/inquiry/${productId}?openExternalBrowser=1`;
     navigator.clipboard.writeText(url);
-    toast.success("商品連結已複製，可貼到 LINE / FB / 蝦皮分享");
+    toast.success("商品連結已複製，貼到 LINE 群組買家點擊會自動用外部瀏覽器開");
   };
 
   const handleReply = async (inquiryId: number) => {
@@ -228,11 +243,11 @@ function SellerDashboardContent({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 text-gray-900" style={{ colorScheme: "light" }}>
       <div className="bg-white border-b">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold">PartLink 儀表板</h1>
+            <h1 className="text-2xl font-bold text-gray-900">PartLink 儀表板</h1>
             <p className="text-gray-600">歡迎，{sellerName}</p>
           </div>
           <div className="flex gap-2">
@@ -265,10 +280,10 @@ function SellerDashboardContent({
           <StatCard label="已回覆" value={stats.replied} color="green" />
         </div>
 
-        <Card>
+        <Card className="bg-white border-gray-200">
           <CardHeader>
-            <CardTitle>詢價管理</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-gray-900">詢價管理</CardTitle>
+            <CardDescription className="text-gray-600">
               {stats.pendingReplies > 0
                 ? `你有 ${stats.pendingReplies} 筆詢價待回覆，請盡快回應`
                 : "目前沒有待回覆的詢價"}
@@ -312,10 +327,10 @@ function SellerDashboardContent({
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white border-gray-200">
           <CardHeader>
-            <CardTitle>我的商品</CardTitle>
-            <CardDescription>點「複製連結」即可分享到 LINE / FB / 蝦皮等</CardDescription>
+            <CardTitle className="text-gray-900">我的商品</CardTitle>
+            <CardDescription className="text-gray-600">點「複製連結」即可分享到 LINE / FB / 蝦皮等</CardDescription>
           </CardHeader>
           <CardContent>
             {productsQuery.isLoading ? (
@@ -334,17 +349,17 @@ function SellerDashboardContent({
             ) : (
               <div className="space-y-2">
                 {products.map((p: any) => (
-                  <div key={p.id} className="flex items-center gap-4 p-3 border rounded-lg hover:bg-gray-50">
+                  <div key={p.id} className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 bg-white">
                     {p.images && p.images.length > 0 ? (
                       <img src={p.images[0]} alt={p.partName} className="w-16 h-16 object-cover rounded" />
                     ) : (
-                      <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+                      <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-gray-500 text-xs">
                         無圖
                       </div>
                     )}
                     <div className="flex-1">
-                      <div className="font-medium">{p.partName}</div>
-                      <div className="text-sm text-gray-600">
+                      <div className="font-semibold text-gray-900">{p.partName}</div>
+                      <div className="text-sm text-gray-700">
                         {p.brand} {p.model} {p.year}
                         {p.price && ` · NT$ ${p.price}`}
                       </div>
@@ -418,9 +433,9 @@ function StatCard({
     green: "text-green-600",
   };
   return (
-    <Card className={highlight ? "border-orange-300 border-2" : ""}>
+    <Card className={`bg-white ${highlight ? "border-orange-400 border-2" : "border-gray-200"}`}>
       <CardContent className="pt-6">
-        <p className="text-sm text-gray-600">{label}</p>
+        <p className="text-sm font-medium text-gray-700">{label}</p>
         <p className={`text-3xl font-bold mt-1 ${colorMap[color]}`}>{value}</p>
       </CardContent>
     </Card>
@@ -454,31 +469,31 @@ function InquiryCard({
   }[inquiry.status as "pending" | "replied" | "closed"];
 
   return (
-    <div className={`border rounded-lg p-4 ${isPending ? "border-orange-200 bg-orange-50/30" : ""}`}>
+    <div className={`border rounded-lg p-4 bg-white ${isPending ? "border-orange-300 border-2" : "border-gray-200"}`}>
       <div className="flex justify-between items-start mb-2">
         <div>
-          <div className="font-medium">
+          <div className="font-semibold text-gray-900">
             {inquiry.brand} {inquiry.model} {inquiry.partName || "（商品已刪除）"}
           </div>
-          <div className="text-sm text-gray-600 mt-0.5">
+          <div className="text-sm text-gray-700 mt-0.5">
             買家：{inquiry.buyerName}
             {inquiry.buyerPhone && ` · ${inquiry.buyerPhone}`}
           </div>
         </div>
-        <span className={`px-2 py-1 rounded-full text-xs ${statusBadge.color}`}>{statusBadge.label}</span>
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusBadge.color}`}>{statusBadge.label}</span>
       </div>
 
       {inquiry.message && (
-        <div className="text-sm bg-gray-100 p-2 rounded mb-2">
-          <span className="text-gray-500">訊息：</span>
+        <div className="text-sm bg-gray-100 p-2 rounded mb-2 text-gray-900">
+          <span className="text-gray-600 font-medium">訊息：</span>
           {inquiry.message}
         </div>
       )}
 
       {inquiry.sellerReply && (
-        <div className="text-sm bg-green-50 border border-green-200 p-2 rounded mb-2">
-          <span className="text-green-700 font-medium">你的回覆：</span>
-          {inquiry.sellerReply}
+        <div className="text-sm bg-green-50 border border-green-300 p-2 rounded mb-2 text-gray-900">
+          <span className="text-green-800 font-bold">你的回覆：</span>
+          <span className="text-gray-900">{inquiry.sellerReply}</span>
         </div>
       )}
 

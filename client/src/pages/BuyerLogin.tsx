@@ -20,6 +20,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import { LineInAppBrowserGuard } from "@/components/LineInAppBrowserGuard";
 
 const LINE_CHANNEL_ID = "2009895830";
 
@@ -28,6 +29,14 @@ function generateState() {
 }
 
 export default function BuyerLogin() {
+  return (
+    <LineInAppBrowserGuard>
+      <BuyerLoginContent />
+    </LineInAppBrowserGuard>
+  );
+}
+
+function BuyerLoginContent() {
   const [, navigate] = useLocation();
   const [loading, setLoading] = useState(false);
   const [redirectTo, setRedirectTo] = useState("/");

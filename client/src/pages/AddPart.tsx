@@ -104,7 +104,8 @@ export default function AddPart() {
         images: images.length > 0 ? images : undefined,
       });
 
-      const link = `${window.location.origin}/inquiry/${product.id}`;
+      // ?openExternalBrowser=1 → LINE 看到這參數會強制用外部瀏覽器開（避免登入失效）
+      const link = `${window.location.origin}/inquiry/${product.id}?openExternalBrowser=1`;
       setGeneratedLink(link);
       // 自動複製到剪貼簿
       try {
